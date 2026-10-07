@@ -43,7 +43,7 @@ class CartPage(BasePage):
         try:
             # Wait for the modal with register/login to appear (for guest users)
             self.page.locator("#checkoutModal").wait_for(state="visible", timeout=2000)
-        except:
+        except Exception:
             # If modal doesn't appear, we must be logged in - wait for checkout page
             # Increase timeout to account for slower server responses
             self.page.locator("#address_delivery").wait_for(state="visible", timeout=15000)
