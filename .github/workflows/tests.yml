@@ -1,0 +1,103 @@
+name: Tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install ruff
+      - run: ruff check .
+
+  api:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Run API tests (no browser needed)
+        run: pytest -m "api and not ui and not exercise" --reruns 1 --html=reports/api-report.html
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-report
+          path: reports/
+
+  ui:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: playwright install --with-deps chromium
+      - name: Run UI tests
+        run: pytest -m "ui and not exercise" --reruns 1 --html=reports/ui-report.html
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ui-results
+          path: |
+            reports/
+            test-results/
+
+  publish-report:
+    # Publishes the latest reports from main to GitHub Pages.
+    # One time setup: repo Settings, Pages, Source = "GitHub Actions".
+    needs: [api, ui]
+    if: always() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: "*"
+          path: site-src
+      - name: Build report site
+        run: |
+          mkdir -p site
+          cp site-src/api-report/*.html site/ 2>/dev/null || true
+          cp site-src/ui-results/reports/*.html site/ 2>/dev/null || true
+          {
+            echo "<!doctype html><meta charset=utf-8><title>Test reports</title>"
+            echo "<h1>Latest test reports</h1><p>Run ${{ github.run_number }}, commit ${GITHUB_SHA::7}</p><ul>"
+            for f in site/*-report.html; do
+              [ -e "$f" ] && echo "<li><a href=\"$(basename "$f")\">$(basename "$f")</a></li>"
+            done
+            echo "</ul>"
+          } > site/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
