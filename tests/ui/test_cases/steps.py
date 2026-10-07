@@ -12,7 +12,9 @@ from autoexercise.pages.app import App
 def verify_home_page_visible(app: App) -> None:
     """'Verify that home page is visible successfully'"""
     title = app.page.title()
-    assert re.search(r"Automation Exercise", title), f"Expected title to contain 'Automation Exercise', got '{title}'"
+    assert re.search(r"Automation Exercise", title), (
+        f"Expected title to contain 'Automation Exercise', got '{title}'"
+    )
     assert app.home.slider.is_visible(), "Home slider should be visible"
 
 
@@ -23,7 +25,9 @@ def sign_up_through_ui(app: App, user: dict) -> None:
     app.signup.fill_account(user)
     app.signup.submit()
     heading_text = app.account.created_heading.inner_text()
-    assert re.search(r"account created", heading_text, re.IGNORECASE), f"Expected 'account created' in '{heading_text}'"
+    assert re.search(r"account created", heading_text, re.IGNORECASE), (
+        f"Expected 'account created' in '{heading_text}'"
+    )
     app.account.continue_button.click()
 
 
@@ -37,7 +41,9 @@ def delete_account_through_ui(app: App) -> None:
     """Click Delete Account, verify ACCOUNT DELETED!, press Continue."""
     app.nav.delete_account_link.click()
     deleted_text = app.account.deleted_heading.inner_text()
-    assert re.search(r"account deleted", deleted_text, re.IGNORECASE), f"Expected 'account deleted' in '{deleted_text}'"
+    assert re.search(r"account deleted", deleted_text, re.IGNORECASE), (
+        f"Expected 'account deleted' in '{deleted_text}'"
+    )
     app.account.continue_button.click()
 
 
@@ -70,6 +76,8 @@ def place_order_and_pay(
     app.checkout.place_order(comment)
     app.payment.pay(card)
     heading_text = app.order.heading.inner_text()
-    assert re.search(r"order placed", heading_text, re.IGNORECASE), f"Expected 'order placed' in '{heading_text}'"
+    assert re.search(r"order placed", heading_text, re.IGNORECASE), (
+        f"Expected 'order placed' in '{heading_text}'"
+    )
     confirmation = app.page.get_by_text("Congratulations! Your order has been confirmed!")
     assert confirmation.is_visible(), "Order confirmation message should be visible"

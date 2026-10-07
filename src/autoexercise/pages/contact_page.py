@@ -33,11 +33,11 @@ class ContactPage(BasePage):
         # Give the server time to process and populate the success message
         # The server responds with AJAX that populates the .status.alert-success div
         import time
-        for i in range(30):  # Wait up to 15 seconds
+        for _ in range(30):  # Wait up to 15 seconds
             try:
                 text = self.page.locator(".status.alert-success").inner_text()
                 if text and "Success" in text:
                     return
-            except:
+            except Exception:
                 pass
             time.sleep(0.5)
