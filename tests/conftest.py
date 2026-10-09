@@ -1,7 +1,8 @@
 """Fixtures shared by UI and API tests."""
 
-import pytest
 import time
+
+import pytest
 
 from autoexercise.api.account_client import AccountClient
 from autoexercise.api.base_client import code
@@ -27,7 +28,7 @@ def use_data_qa_attribute(playwright):
 @pytest.fixture(autouse=True)
 def rate_limit_delay():
     """Add a small delay between tests to avoid WAF rate limiting.
-    
+
     GitHub Actions runners often share IPs, which can trigger rate limits
     when running tests rapidly.
     """
@@ -39,10 +40,14 @@ def rate_limit_delay():
 @pytest.fixture(scope="session")
 def api_context(playwright):
     """Create API context with browser-like headers to avoid WAF blocking."""
+    user_agent = (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    )
     context = playwright.request.new_context(
         base_url=settings.api_base_url,
         extra_http_headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "User-Agent": user_agent,
             "Accept": "application/json, text/javascript, */*; q=0.01",
             "Accept-Language": "en-US,en;q=0.9",
             "Accept-Encoding": "gzip, deflate, br",

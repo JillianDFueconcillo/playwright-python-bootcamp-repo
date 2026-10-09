@@ -11,7 +11,7 @@ from playwright.sync_api import APIRequestContext, APIResponse
 
 def code(response: APIResponse) -> int:
     """Return the responseCode from the JSON body.
-    
+
     Raises:
         RuntimeError: If the response is HTML (likely a WAF block) instead of JSON
         KeyError: If the JSON doesn't contain responseCode
@@ -21,12 +21,16 @@ def code(response: APIResponse) -> int:
     except Exception as e:
         # Check if we got a WAF block (HTML instead of JSON)
         text = response.text()
-        if text.strip().startswith("<!DOCTYPE") or "Please wait while your request is being verified" in text:
-            raise RuntimeError(
+        is_html = text.strip().startswith("<!DOCTYPE")
+        is_waf_block = "Please wait while your request is being verified" in text
+        if is_html or is_waf_block:
+            msg = (
                 f"API request blocked by WAF/server verification. Status: {response.status}. "
-                "The server is throttling requests. This often happens on GitHub Actions due to shared IPs. "
-                "Consider: 1) Adding request delays, 2) Using retry logic, 3) Checking server status"
-            ) from e
+                "The server is throttling requests. This often happens on GitHub Actions "
+                "due to shared IPs. Consider: 1) Adding request delays, 2) Using retry "
+                "logic, 3) Checking server status"
+            )
+            raise RuntimeError(msg) from e
         raise
 
 
