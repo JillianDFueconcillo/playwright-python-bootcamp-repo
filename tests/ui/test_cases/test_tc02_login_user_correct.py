@@ -1,4 +1,4 @@
-"""Test Case 2: Login User with correct email and password. See https://automationexercise.com/test_cases"""
+"""Test Case 2: Login User with correct email and password - See https://automationexercise.com/test_cases"""
 
 import pytest
 

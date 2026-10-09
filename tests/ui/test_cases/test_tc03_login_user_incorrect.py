@@ -16,7 +16,7 @@ pytestmark = [pytest.mark.ui, pytest.mark.testcases]
 def test_tc03_login_user_incorrect(app, new_user):
     """Test Case 3: Login User with incorrect email and password.
     
-    Steps from automationexercise.com:
+    Steps  from automationexercise.com:
     1. Launch browser
     2. Navigate to url 'http://automationexercise.com'
     3. Verify that home page is visible successfully

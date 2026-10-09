@@ -15,10 +15,10 @@ pytestmark = [pytest.mark.ui, pytest.mark.testcases]
 
 
 def test_tc04_logout_user(app, new_user):
-    """Test Case 4: Logout User.
+    """Test Case 4: Logout User
     
     Steps from automationexercise.com:
-    1. Launch browser
+    1. Launch browser 
     2. Navigate to url 'http://automationexercise.com'
     3. Verify that home page is visible successfully
     4. Click on 'Signup / Login' button
