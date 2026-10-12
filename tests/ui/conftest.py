@@ -11,6 +11,15 @@ from autoexercise.pages.home_page import HomePage
 from autoexercise.pages.login_page import LoginPage
 from autoexercise.pages.products_page import ProductsPage
 
+
+@pytest.fixture(scope="function")
+def browser_launch_args(request):
+    """Run tc05 test in headed mode when --headed flag is passed or fixture detects it."""
+    if request.node.name == "test_tc05_register_email":
+        return {"headless": False}
+    return {}
+
+
 AD_HOSTS = re.compile(
     r"(googlesyndication|doubleclick|googleadservices|adservice\.google|"
     r"googletagmanager|google-analytics|fundingchoices|adsbygoogle)"

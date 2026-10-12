@@ -19,6 +19,9 @@ def test_tc05_register_email(app, new_user):
     6. Enter name and already registered email address
     7. Click 'Signup' button
     8. Verify error 'Email Address already exist!' is visible
+
+    NOTE: This test runs with a visible browser window (headed mode) for visual testing.
+    The browser_launch_args fixture in conftest.py configures headless=False for this test.
     """
     # STEP 1-2: Launch browser and navigate to the home page (http://automationexercise.com)
     # Opens the base URL configured in pytest.ini or settings
