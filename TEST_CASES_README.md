@@ -10,7 +10,10 @@ This project contains 5 test cases (TC01-TC05) that test the automationexercise.
 | TC02 | `test_tc02_login_user_correct.py` | Login with correct credentials |
 | TC03 | `test_tc03_login_user_incorrect.py` | Verify error message for incorrect login |
 | TC04 | `test_tc04_logout_user.py` | Logout functionality |
-| TC05 | `test_tc05_register_email.py` | **Verify error for duplicate email registration** |
+| TC05 | `test_tc05_register_email.py` | Verify error for duplicate email registration |
+| TC06 | `test_tc06_contact_form.py` | Contact Us form submission with file upload |
+| TC07 | `test_tc07_verify_page.py` | Verify Test Cases page navigation and display |
+| TC08 | `test_tc08_verify_all_products.py` | **Verify all products page and product details** |
 
 ## Running Tests
 
@@ -38,7 +41,7 @@ The `.vscode/settings.json` file is configured to automatically add the `--heade
 
 1. Open VS Code
 2. Open the **Beaker Test Explorer** (flask icon in left sidebar)
-3. Find **test_tc05_register_email**
+3. Find **test_tc05_register_email**, **test_tc06_contact_form**, **test_tc07_verify_page**, or **test_tc08_verify_all_products**
 4. Click the ▶️ **Run** button
 5. A Chromium browser window should appear showing the test running in real-time ✅
 
@@ -81,6 +84,9 @@ pytest -m testcases
 ## Notes
 
 - **TC01-TC04** run in **headless mode** (no visible window) for speed and CI/CD compatibility
-- **TC05** runs in **headed mode** (visible window) for visual testing when `--headed` flag is used
+- **TC05-TC08** run in **headed mode** (visible window) for visual testing when `--headed` flag is used
 - All tests include ad-blocking and ad-hiding CSS injection to prevent ads from interfering with tests
 - Tests use pytest-playwright for cross-browser automation
+- TC06 creates temporary files for upload testing and cleans them up after the test finishes
+- TC07 verifies navigation to the test cases page
+- TC08 tests product listing and product detail page navigation and information display
