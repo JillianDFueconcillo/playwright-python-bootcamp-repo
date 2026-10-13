@@ -76,7 +76,9 @@ def test_tc13_verify_quanity_cart(app):
     
     # Verify the product name is in the cart
     first_item_name = item_names.first.inner_text()
-    assert product_name in first_item_name, f"Expected '{product_name}' in cart, but got '{first_item_name}'"
+    assert product_name in first_item_name, (
+        f"Expected '{product_name}' in cart, but got '{first_item_name}'"
+    )
     
     # Verify the quantity is 4
     quantities = app.cart.quantities
