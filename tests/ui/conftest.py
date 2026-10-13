@@ -14,12 +14,13 @@ from autoexercise.pages.products_page import ProductsPage
 
 @pytest.fixture(scope="function")
 def browser_launch_args(request):
-    """Run tc05, tc06, tc07, and tc08 tests in headed mode when --headed flag is passed."""
+    """Run tc05, tc06, tc07, tc08, and tc13 tests in headed mode when --headed flag is passed."""
     if request.node.name in (
         "test_tc05_register_email",
         "test_tc06_contact_form",
         "test_tc07_verify_page",
         "test_tc08_verify_all_products",
+        "test_tc13_verify_quanity_cart",
     ):
         return {"headless": False}
     return {}
