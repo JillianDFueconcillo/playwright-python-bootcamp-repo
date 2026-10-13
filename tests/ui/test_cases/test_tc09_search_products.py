@@ -1,6 +1,7 @@
 """Test Case 9: Search Product. See https://automationexercise.com/test_cases"""
 
 import pytest
+from playwright.sync_api import expect
 
 from tests.ui.test_cases.steps import verify_home_page_visible
 
@@ -31,19 +32,17 @@ def test_tc09_search_products(app):
 
     # STEP 4: Click on 'Products' button in the navigation
     app.nav.products_link.click()
+    app.page.wait_for_load_state("networkidle")
 
     # STEP 5: Verify user is navigated to ALL PRODUCTS page successfully
     assert "Products" in app.page.title()
 
     # STEP 6: Enter product name in search input and click search button
-    search_input = app.page.locator("#search_product")
-    search_input.fill("top")
-    app.page.locator("#submit_search").click()
+    app.products.search("top")
 
     # STEP 7: Verify 'SEARCHED PRODUCTS' is visible
-    searched_heading = app.page.get_by_text("Searched Products")
-    assert searched_heading.is_visible()
+    # expect() waits for the results page to load, unlike is_visible() which checks once
+    expect(app.products.searched_heading).to_be_visible()
 
     # STEP 8: Verify all the products related to search are visible
-    products = app.page.locator(".features_items .product-image-wrapper")
-    assert products.count() > 0, "At least one product should be visible"
+    assert app.products.cards.count() > 0, "At least one product should be visible"
