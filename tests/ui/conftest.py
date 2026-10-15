@@ -14,17 +14,20 @@ from autoexercise.pages.products_page import ProductsPage
 
 @pytest.fixture(scope="function")
 def browser_launch_args(request):
-    """Run tc05-tc08 and tc13-tc16 in headed mode when --headed flag is passed."""
-    if request.node.name in (
+    """Run tc05-tc08, tc13, and parametrized tc14-tc16 in headed mode."""
+    # Check for specific test names or parametrized test_place_order runs
+    is_headed_test = request.node.name in (
         "test_tc05_register_email",
         "test_tc06_contact_form",
         "test_tc07_verify_page",
         "test_tc08_verify_all_products",
         "test_tc13_verify_quanity_cart",
-        "test_tc14_place_order_checkout",
-        "test_tc15_register_before_checkout",
-        "test_tc16_login_before_checkout",
-    ):
+    )
+    is_parametrized_checkout = any(
+        param_id in request.node.name
+        for param_id in ["test_place_order[tc14", "test_place_order[tc15", "test_place_order[tc16"]
+    )
+    if is_headed_test or is_parametrized_checkout:
         return {"headless": False}
     return {}
 
